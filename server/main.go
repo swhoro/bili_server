@@ -13,16 +13,11 @@ import (
 
 func setupDatabase() {
 	var err error
-	g.DB, err = gorm.Open(sqlite.Open("./config/main.sqlite"), &gorm.Config{
+	g.DB, err = gorm.Open(sqlite.Open(datamodel.DatabasePath), &gorm.Config{
 		Logger: gormLogger.Default.LogMode(gormLogger.Silent),
 	})
 	if err != nil {
 		panic(err)
-	}
-
-	err = g.DB.AutoMigrate(&datamodel.User{}, &datamodel.BangumiItem{})
-	if err != nil {
-		panic(err.Error())
 	}
 }
 

@@ -3,7 +3,6 @@ package router
 import (
 	"math/rand"
 	"strings"
-	"time"
 
 	"github.com/goccy/go-json"
 	jwtware "github.com/gofiber/contrib/jwt"
@@ -18,7 +17,6 @@ func RegisterRouter() {
 	// 生成secret
 	const charset = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	sb := strings.Builder{}
-	rand.Seed(time.Now().UnixNano())
 	n := rand.Intn(10)
 	sb.Grow(n)
 	l := len(charset)
@@ -39,6 +37,7 @@ func RegisterRouter() {
 	g.App = fiber.New(fiber.Config{
 		JSONEncoder: json.Marshal,
 		JSONDecoder: json.Unmarshal,
+		Prefork:     true,
 	})
 
 	api := g.App.Group("/api")
