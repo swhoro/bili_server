@@ -9,9 +9,9 @@ import (
 	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
 
-	g "b.carriage.fun/global"
-	response "b.carriage.fun/response/error"
-	v1logic "b.carriage.fun/router/api/v1"
+	g "b.carriage.fun/server/global"
+	response "b.carriage.fun/server/response/error"
+	v1logic "b.carriage.fun/server/router/api/v1"
 )
 
 func RegisterRouter() {

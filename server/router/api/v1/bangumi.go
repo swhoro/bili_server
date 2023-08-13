@@ -4,11 +4,11 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
-	g "b.carriage.fun/global"
-	"b.carriage.fun/model"
-	responseError "b.carriage.fun/response/error"
-	responseOK "b.carriage.fun/response/ok"
-	"b.carriage.fun/utils"
+	"b.carriage.fun/datamodel"
+	g "b.carriage.fun/server/global"
+	responseError "b.carriage.fun/server/response/error"
+	responseOK "b.carriage.fun/server/response/ok"
+	"b.carriage.fun/server/utils"
 )
 
 // AddBangumi 上传bangumi信息 POST
@@ -33,18 +33,18 @@ func AddBangumi(c *fiber.Ctx) error {
 	if err != nil {
 		return responseError.ReturnWithNotLogin(c)
 	}
-	user := new(model.User)
+	user := new(datamodel.User)
 	err = g.DB.First(user, userId).Error
 	if err == gorm.ErrRecordNotFound {
 		return responseError.ReturnWithNoUserFound(c)
 	}
 
-	var rs []model.BangumiItem
+	var rs []datamodel.BangumiItem
 	err = g.DB.Find(&rs, "name = ?", in.Name).Error
 	if err != nil {
 		return responseError.ReturnWithOuterError(c, "bangumi already existed")
 	}
-	bangumiItem := &model.BangumiItem{
+	bangumiItem := &datamodel.BangumiItem{
 		CretedBy: *user,
 		Name:     in.Name,
 		WebUrl:   in.WebUrl,
@@ -59,7 +59,7 @@ func AddBangumi(c *fiber.Ctx) error {
 }
 
 func GetAllBangumi(c *fiber.Ctx) error {
-	var rs = make([]model.BangumiItem, 0, 20)
+	var rs = make([]datamodel.BangumiItem, 0, 20)
 	err := g.DB.Limit(20).Select([]string{"name", "web_url", "pic_url"}).Find(&rs).Error
 	if err != nil {
 		return responseError.ReturnWithInternalError(c, err)

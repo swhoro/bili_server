@@ -4,8 +4,8 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
-	g "b.carriage.fun/global"
-	"b.carriage.fun/utils/logger/operationCode"
+	g "b.carriage.fun/server/global"
+	"b.carriage.fun/server/utils/logger/operationCode"
 )
 
 // func newLogger(filename string) *zap.Logger {

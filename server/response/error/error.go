@@ -3,8 +3,8 @@ package error
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"b.carriage.fun/utils/logger"
-	"b.carriage.fun/utils/logger/operationCode"
+	"b.carriage.fun/server/utils/logger"
+	"b.carriage.fun/server/utils/logger/operationCode"
 )
 
 type SimpleError struct {

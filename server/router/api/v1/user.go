@@ -7,12 +7,12 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"gorm.io/gorm"
 
-	g "b.carriage.fun/global"
-	"b.carriage.fun/model"
-	responseError "b.carriage.fun/response/error"
-	responseOK "b.carriage.fun/response/ok"
-	"b.carriage.fun/utils"
-	"b.carriage.fun/utils/logger/operationCode"
+	"b.carriage.fun/datamodel"
+	g "b.carriage.fun/server/global"
+	responseError "b.carriage.fun/server/response/error"
+	responseOK "b.carriage.fun/server/response/ok"
+	"b.carriage.fun/server/utils"
+	"b.carriage.fun/server/utils/logger/operationCode"
 )
 
 // AddUser 新增用户 POST
@@ -37,16 +37,16 @@ func AddUser(c *fiber.Ctx) error {
 		return responseError.ReturnWithInvalidInput(c)
 	}
 
-	user := new(model.User)
+	user := new(datamodel.User)
 	err = g.DB.First(user, "username = ?", username).Error
 	if err == nil {
 		return responseError.ReturnWithOuterError(c, "user already existed")
 	}
 
-	err = g.DB.Create(&model.User{
+	err = g.DB.Create(&datamodel.User{
 		Username:  username,
 		Password:  password,
-		Authority: model.AUser,
+		Authority: datamodel.AUser,
 	}).Error
 	if err != nil {
 		return responseError.ReturnWithInternalError(c, err)
@@ -62,7 +62,7 @@ func AddUser(c *fiber.Ctx) error {
 func ModifyUser(c *fiber.Ctx) error {
 	type ModifyUserInput struct {
 		TargetID  uint32
-		Authority model.Authority
+		Authority datamodel.Authority
 	}
 
 	operatorID, err := utils.GetInformationFromJWTToken(c, "id")
@@ -70,14 +70,14 @@ func ModifyUser(c *fiber.Ctx) error {
 		return responseError.ReturnWithNotLogin(c)
 	}
 
-	user := new(model.User)
+	user := new(datamodel.User)
 	err = g.DB.First(user, operatorID).Error
 	if err == gorm.ErrRecordNotFound {
 		return responseError.ReturnWithNoUserFound(c)
 	} else if err != nil {
 		return responseError.ReturnWithInternalError(c, err)
 	}
-	if user.Authority > model.AAdministrator {
+	if user.Authority > datamodel.AAdministrator {
 		return responseError.ReturnWithNotAuthorize(c, uint32(operatorID.(float64)), operationCode.ModifyUserAuthorize)
 	}
 
@@ -93,7 +93,7 @@ func ModifyUser(c *fiber.Ctx) error {
 		return responseError.ReturnWithInvalidInput(c)
 	}
 
-	targetUser := new(model.User)
+	targetUser := new(datamodel.User)
 	err = g.DB.First(targetUser, targetID).Error
 	if err != nil {
 		return responseError.ReturnWithNoUserFound(c)
@@ -124,7 +124,7 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	username := in.Username
-	user := new(model.User)
+	user := new(datamodel.User)
 	err = g.DB.First(user, "username = ?", username).Error
 	if err == gorm.ErrRecordNotFound {
 		return responseError.ReturnWithNoUserFound(c)
@@ -164,7 +164,7 @@ func GetRestricted(c *fiber.Ctx) error {
 		return responseError.ReturnWithNotLogin(c)
 	}
 
-	user := new(model.User)
+	user := new(datamodel.User)
 	err = g.DB.First(user, id).Error
 
 	if err == gorm.ErrRecordNotFound {

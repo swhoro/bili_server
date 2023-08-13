@@ -1,4 +1,4 @@
-module b.carriage.fun
+module b.carriage.fun/server
 
 go 1.19
 

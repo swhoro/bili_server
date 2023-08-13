@@ -4,8 +4,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 
-	"b.carriage.fun/global"
-	error2 "b.carriage.fun/response/error"
+	"b.carriage.fun/server/global"
+	error2 "b.carriage.fun/server/response/error"
 )
 
 func GetInformationFromJWTToken(c *fiber.Ctx, param string) (any, error) {
